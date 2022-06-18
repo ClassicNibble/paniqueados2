@@ -5,12 +5,14 @@ namespace Clases {
         Trazo trazo;
         int posX;
         int posY;
+        int tamanio;
 
-        public Jugador(Trazo t, int x, int y)
+        public Jugador(Trazo t, int x, int y, int tam)
         {
             this.trazo = t;
             this.posX = x;
             this.posY = y;
+            this.tamanio = tam;
         }
 
         public int getX()
@@ -38,6 +40,10 @@ namespace Clases {
             this.posY = y;
         }
 
+
+        public int getTam() {
+            return this.tamanio;
+        }
 
     }
 

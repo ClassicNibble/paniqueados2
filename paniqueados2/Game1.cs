@@ -21,7 +21,9 @@ namespace paniqueados2 {
         int LimitX = 1000;
         int LimitY = 700;
 
-        Jugador cursorJugador = new Jugador(new Trazo(5), 0, 0);
+        // Cambiar los tamaños aquí para ver reflejados
+        Jugador cursorJugador = new Jugador(new Trazo(5), 0, 0, 5);
+
         Vector2 posicionPlayer  = new Vector2(0, 0);
 
         float time;
@@ -31,13 +33,12 @@ namespace paniqueados2 {
 
         //Rastroo
         private Texture2D _texturaRastro;
-        private Rectangle _rectanguleRastro;
         SpriteFont font;
 
         public int[] generarCoords(int LimitX, int LimitY) {
             int randX = 1;
             int randY = 1;
-            while (randX % cursorJugador.getTrazo().getTam() != 0 || randY %  cursorJugador.getTrazo().getTam() != 0) {
+            while (randX % cursorJugador.getTam() != 0 || randY %  cursorJugador.getTam() != 0) {
                 Random r = new Random();
                 randX = r.Next(0,LimitX- cursorJugador.getTrazo().getTam() );
                 randY = r.Next(0,LimitY- cursorJugador.getTrazo().getTam() );
@@ -60,7 +61,7 @@ namespace paniqueados2 {
             else if (cursorJugador.getX() >= LimitX)
             {
                 res = true;
-                cursorJugador.setX(LimitX-cursorJugador.getTrazo().getTam());
+                cursorJugador.setX(LimitX-cursorJugador.getTam());
             }
             if (cursorJugador.getY() < 0)
             {
@@ -70,7 +71,7 @@ namespace paniqueados2 {
             else if (cursorJugador.getY() >= LimitY)
             {
                 res = true;
-                cursorJugador.setY(LimitY-cursorJugador.getTrazo().getTam());
+                cursorJugador.setY(LimitY-cursorJugador.getTam());
             }
 
             return res;
@@ -138,8 +139,7 @@ namespace paniqueados2 {
             
 
 
-            _rectangule = new Rectangle((int)posicionPlayer.X, (int)posicionPlayer.Y, 10, 10);
-            _rectanguleRastro = new Rectangle((int)posicionPlayer.X, (int)posicionPlayer.Y, 10, 10);
+            _rectangule = new Rectangle((int)posicionPlayer.X, (int)posicionPlayer.Y, cursorJugador.getTam(), cursorJugador.getTam());
        
             if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D) )
             {
