@@ -1,7 +1,0 @@
---Para poder ejecutar Microsoft XNA en vs code aqui
-https://medium.com/learning-c-by-developing-games/getting-started-with-c-monogame-in-vs-code-2c26c7f198c2
-
---Documentacion monogame
-https://docs.monogame.net/articles/platforms/0_platforms.html
-
-
