@@ -21,7 +21,9 @@ namespace paniqueados2 {
         int LimitX = 1000;
         int LimitY = 700;
 
-        Jugador cursorJugador = new Jugador(new Trazo(), 0, 0);
+        // Cambiar los tamaños aquí para ver reflejados
+        Jugador cursorJugador = new Jugador(new Trazo(5), 0, 0, 5);
+
         Vector2 posicionPlayer  = new Vector2(0, 0);
 
         float time;
@@ -31,16 +33,15 @@ namespace paniqueados2 {
 
         //Rastroo
         private Texture2D _texturaRastro;
-        private Rectangle _rectanguleRastro;
         SpriteFont font;
 
         public int[] generarCoords(int LimitX, int LimitY) {
             int randX = 1;
             int randY = 1;
-            while (randX % 5 != 0 || randY % 5 != 0) {
+            while (randX % cursorJugador.getTam() != 0 || randY %  cursorJugador.getTam() != 0) {
                 Random r = new Random();
-                randX = r.Next(0,LimitX-10);
-                randY = r.Next(0,LimitY-10);
+                randX = r.Next(0,LimitX- cursorJugador.getTrazo().getTam() );
+                randY = r.Next(0,LimitY- cursorJugador.getTrazo().getTam() );
             }
 
             int[] coords = new int[] { randX, randY };
@@ -60,7 +61,7 @@ namespace paniqueados2 {
             else if (cursorJugador.getX() >= LimitX)
             {
                 res = true;
-                cursorJugador.setX(LimitX-10);
+                cursorJugador.setX(LimitX-cursorJugador.getTam());
             }
             if (cursorJugador.getY() < 0)
             {
@@ -70,7 +71,7 @@ namespace paniqueados2 {
             else if (cursorJugador.getY() >= LimitY)
             {
                 res = true;
-                cursorJugador.setY(LimitY-10);
+                cursorJugador.setY(LimitY-cursorJugador.getTam());
             }
 
             return res;
@@ -138,28 +139,27 @@ namespace paniqueados2 {
             
 
 
-            _rectangule = new Rectangle((int)posicionPlayer.X, (int)posicionPlayer.Y, 10, 10);
-            _rectanguleRastro = new Rectangle((int)posicionPlayer.X, (int)posicionPlayer.Y, 10, 10);
+            _rectangule = new Rectangle((int)posicionPlayer.X, (int)posicionPlayer.Y, cursorJugador.getTam(), cursorJugador.getTam());
        
             if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D) )
             {
-                cursorJugador.setX( cursorJugador.getX() + 10);
+                cursorJugador.setX( cursorJugador.getX() + cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("D"); }
 
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Left) || Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                cursorJugador.setX( cursorJugador.getX() - 10);
+                cursorJugador.setX( cursorJugador.getX() - cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("A"); }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Up) || Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                cursorJugador.setY( cursorJugador.getY() - 10);
+                cursorJugador.setY( cursorJugador.getY() - cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("W"); }
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Down) || Keyboard.GetState().IsKeyDown(Keys.S) )
             {
-                cursorJugador.setY( cursorJugador.getY() + 10);
+                cursorJugador.setY( cursorJugador.getY() + cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("S"); }
             }
 
@@ -167,16 +167,16 @@ namespace paniqueados2 {
                 char ultimaDir = cursorJugador.getTrazo().backtrack();
                 switch(ultimaDir) {
                     case 'W' :
-                        cursorJugador.setY( cursorJugador.getY() + 10);
+                        cursorJugador.setY( cursorJugador.getY() + cursorJugador.getTrazo().getTam());
                         break;
                     case 'A' :
-                        cursorJugador.setX( cursorJugador.getX() + 10);
+                        cursorJugador.setX( cursorJugador.getX() + cursorJugador.getTrazo().getTam());
                         break;
                     case 'S' :
-                        cursorJugador.setY( cursorJugador.getY() - 10);
+                        cursorJugador.setY( cursorJugador.getY() - cursorJugador.getTrazo().getTam());
                         break;
                     case 'D' :
-                        cursorJugador.setX( cursorJugador.getX() - 10);
+                        cursorJugador.setX( cursorJugador.getX() - cursorJugador.getTrazo().getTam());
                         break;
                 }
             }
@@ -216,26 +216,26 @@ namespace paniqueados2 {
                     break;
 
                     case 'W':
-                        y -= 10;
+                        y -= cursorJugador.getTrazo().getTam();
                     break;
 
                     case 'A':
-                        x -= 10;
+                        x -= cursorJugador.getTrazo().getTam();
                     break;
 
                     case 'S':
-                        y += 10;
+                        y += cursorJugador.getTrazo().getTam();
                     break;
 
                     case 'D':
-                        x += 10;
+                        x += cursorJugador.getTrazo().getTam();
                     break;
                 }
-                if(x >= LimitX) x = LimitX - 10;
-                if(y >= LimitY) y = LimitY - 10;
+                if(x >= LimitX) x = LimitX - cursorJugador.getTrazo().getTam();
+                if(y >= LimitY) y = LimitY - cursorJugador.getTrazo().getTam();
                 if(x <= 0) x = 0;
                 if(y <= 0) y = 0;
-                _spriteBatch.Draw(pixel, new Rectangle(x, y, 10, 10), Color.Red);
+                _spriteBatch.Draw(pixel, new Rectangle(x, y, cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
             }
 
             _spriteBatch.Draw(_textura, _rectangule, Color.White);
