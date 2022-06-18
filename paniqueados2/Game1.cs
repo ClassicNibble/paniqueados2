@@ -22,7 +22,8 @@ namespace paniqueados2 {
         int LimitY = 700;
 
         // Cambiar los tamaños aquí para ver reflejados
-        Jugador cursorJugador = new Jugador(new Trazo(5), 0, 0, 5);
+        static int tam = 5;
+        Jugador cursorJugador = new Jugador(new Trazo(tam), 0, 0, tam);
 
         Vector2 posicionPlayer  = new Vector2(0, 0);
 
