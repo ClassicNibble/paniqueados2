@@ -9,10 +9,12 @@ namespace Clases {
         string path;
         int inicioX;
         int inicioY;
+        int tamanio;
 
-        public Trazo()
+        public Trazo(int tam)
         {
             this.path = "X";
+            this.tamanio = tam;
         }
 
         public int getX()
@@ -73,6 +75,11 @@ namespace Clases {
         {
             this.inicioY = yNueva;
         }
+
+        public int getTam() {
+            return this.tamanio;
+        }
     }
+
 
 }
