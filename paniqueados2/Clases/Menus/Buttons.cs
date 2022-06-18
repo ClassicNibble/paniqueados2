@@ -3,9 +3,9 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-namespace paniqueados2.Clases.Menus
+namespace Clases.Menus
 {
-    public class MainMenu
+    public class cButtons
     {
         Texture2D texture;
         Vector2 position;
@@ -14,9 +14,9 @@ namespace paniqueados2.Clases.Menus
 
         public Vector2 size;
 
-        public MainMenu(Texture2D newTexture,GraphicsDevice graphics){
+        public cButtons(Texture2D newTexture,GraphicsDevice graphics){
             texture=newTexture;
-            size=new Vector2(graphics.Viewport.Width/8,graphics.Viewport.Height/8);
+            size=new Vector2(graphics.Viewport.Width/8,graphics.Viewport.Height/5);
 
             
         }

@@ -1,13 +1,12 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿
 using System.Collections.Generic;
 using System.Text;
 using System;
-using System.Text.RegularExpressions;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Clases;
+using Clases.Menus;
 
 namespace paniqueados2 {
 
@@ -16,10 +15,24 @@ namespace paniqueados2 {
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+
+        ///Identificador de estados de pantallas
+        enum GameStates{
+            MainMenu,
+            InGame,
+            Options
+        }
+        GameStates CurrentGameState=GameStates.MainMenu;
+        ///////////////////
+
+
         private Texture2D _textura;
         private Rectangle _rectangule;
         int LimitX = 1000;
         int LimitY = 700;
+
+        cButtons Start;
 
         // Cambiar los tamaños aquí para ver reflejados
         Jugador cursorJugador = new Jugador(new Trazo(5), 0, 0, 5);
@@ -108,7 +121,11 @@ namespace paniqueados2 {
         }
 
         protected override void LoadContent()
+
         {
+
+
+
             int total = LimitX * LimitY;
             int[] coords = generarCoords(LimitX, LimitY);
 
@@ -123,12 +140,32 @@ namespace paniqueados2 {
 
             _textura = Content.Load<Texture2D>("puntito");
             _texturaRastro = Content.Load<Texture2D>("rastro");
+
+            IsMouseVisible=true;
+            Start=new cButtons(Content.Load<Texture2D>("play"),_graphics.GraphicsDevice);
+            Start.setPosition(new Vector2(350,300));
             
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
+
+            MouseState mouse =Mouse.GetState();
+
+            switch(CurrentGameState){
+                case GameStates.MainMenu:
+                if(Start.isClicked==true)
+                CurrentGameState=GameStates.InGame;
+                Start.Update(mouse);
+                break;
+                case GameStates.InGame:
+                break;
+            }
+
+
+
+
             posicionPlayer  = new Vector2(cursorJugador.getX(), cursorJugador.getY());
             contador++;
             time = contador / 1000;
@@ -187,16 +224,33 @@ namespace paniqueados2 {
         protected override void Draw(GameTime gameTime)
         {
 
+
+          
+
+
+
+
             string playerX = "";
             string playerY = "";
             Vector2 position2 = new Vector2(10, 10);
             Vector2 textMiddlePoint = font.MeasureString("text") / 2;
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+
+            ///Empezar a dibujos
             _spriteBatch.Begin();
-            
-            
-            ///Texto
+/// MENU
+             switch(CurrentGameState){
+                case GameStates.MainMenu:
+                Start.Draw(_spriteBatch);
+                break;
+
+
+///IN GAME
+
+                case GameStates.InGame:
+                  ///Texto
             playerX = new StringBuilder().Append(posicionPlayer.X).ToString();
             playerY = new StringBuilder().Append(posicionPlayer.Y).ToString();
             _spriteBatch.DrawString(font, "X:" + playerX + " Y:" + playerY + " Path:" + cursorJugador.getTrazo().getPath(), position2, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
@@ -239,6 +293,11 @@ namespace paniqueados2 {
             }
 
             _spriteBatch.Draw(_textura, _rectangule, Color.White);
+                break;
+            }
+
+            
+          
             _spriteBatch.End();
 
 
