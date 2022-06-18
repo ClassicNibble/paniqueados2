@@ -118,7 +118,7 @@ namespace paniqueados2
         protected override void Initialize()
         {
             pixelScreen.Add(posicionPlayer);
-
+Console.WriteLine("a");
             pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[1] { Color.White });        // TODO: Add your initialization logic here
             _graphics.PreferredBackBufferWidth = LimitX;
