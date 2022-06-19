@@ -60,12 +60,6 @@ namespace Clases {
             return this.path;
         }
 
-        public Tile terminarTrazo(Tile tileModificado, List<int> listaNueva)
-        {
-            tileModificado.agregarPuntos(listaNueva);
-            return tileModificado;
-        }
-
         public void setXInicial(int xNueva)
         {
             this.inicioX = xNueva;
@@ -79,6 +73,11 @@ namespace Clases {
         public int getTam() {
             return this.tamanio;
         }
+
+        public void setPath(string nuevo) {
+            this.path = nuevo;
+        }
+
     }
 
 
