@@ -23,7 +23,7 @@ namespace paniqueados2 {
 
         // Cambiar los tamaños aquí para ver reflejados
         static int tam = 10;
-        static Tile tablero = new Tile(tam, LimitX, LimitY, 500);
+        static Tablero tablero = new Tablero(tam, LimitX, LimitY, 500);
         Jugador cursorJugador = tablero.getJugadores()[0];
 
 
@@ -190,7 +190,7 @@ namespace paniqueados2 {
             /// TRAZADO
             Trazo trazo = cursorJugador.getTrazo();
             
-            tablero.trazoATiles(trazo);
+            tablero.trazoATableros(trazo);
             
             List<char[]> matriz = tablero.getMatriz();
 
@@ -199,8 +199,11 @@ namespace paniqueados2 {
                     if(matriz[i][j] =='A') {
                         _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
                     }
-                    if(matriz[i][j] =='C' || matriz[i][j] =='H') {
+                    if(matriz[i][j] =='C') {
                         _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Blue);
+                    }
+                    if(matriz[i][j] =='1') {
+                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Green);
                     }
                 }
             }
