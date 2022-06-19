@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Clases;
 
+
 namespace paniqueados2 {
 
     public class Game1 : Game
@@ -17,13 +18,14 @@ namespace paniqueados2 {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D _textura;
-        private Rectangle _rectangule;
-        int LimitX = 1000;
-        int LimitY = 700;
+        static int LimitX = 1000;
+        static int LimitY = 700;
 
         // Cambiar los tamaños aquí para ver reflejados
-        static int tam = 5;
-        Jugador cursorJugador = new Jugador(new Trazo(tam), 0, 0, tam);
+        static int tam = 10;
+        static Tablero tablero = new Tablero(tam, LimitX, LimitY, 500);
+        Jugador cursorJugador = tablero.getJugadores()[0];
+
 
         Vector2 posicionPlayer  = new Vector2(0, 0);
 
@@ -33,22 +35,9 @@ namespace paniqueados2 {
         public List<Vector2> pixelScreen = new List<Vector2>();
 
         //Rastroo
-        private Texture2D _texturaRastro;
         SpriteFont font;
 
-        public int[] generarCoords(int LimitX, int LimitY) {
-            int randX = 1;
-            int randY = 1;
-            while (randX % cursorJugador.getTam() != 0 || randY %  cursorJugador.getTam() != 0) {
-                Random r = new Random();
-                randX = r.Next(0,LimitX- cursorJugador.getTrazo().getTam() );
-                randY = r.Next(0,LimitY- cursorJugador.getTrazo().getTam() );
-            }
-
-            int[] coords = new int[] { randX, randY };
-             
-            return coords;
-        }
+        
 
         public bool LimitMap()
         {
@@ -110,11 +99,7 @@ namespace paniqueados2 {
 
         protected override void LoadContent()
         {
-            int total = LimitX * LimitY;
-            int[] coords = generarCoords(LimitX, LimitY);
-
-            cursorJugador.setX(coords[0]);
-            cursorJugador.setX(coords[1]);
+            
             cursorJugador.getTrazo().setXInicial(cursorJugador.getX());
             cursorJugador.getTrazo().setYInicial(cursorJugador.getY());
 
@@ -123,7 +108,6 @@ namespace paniqueados2 {
             font = Content.Load<SpriteFont>("File");
 
             _textura = Content.Load<Texture2D>("puntito");
-            _texturaRastro = Content.Load<Texture2D>("rastro");
             
             // TODO: use this.Content to load your game content here
         }
@@ -140,8 +124,7 @@ namespace paniqueados2 {
             
 
 
-            _rectangule = new Rectangle((int)posicionPlayer.X, (int)posicionPlayer.Y, cursorJugador.getTam(), cursorJugador.getTam());
-       
+            
             if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D) )
             {
                 cursorJugador.setX( cursorJugador.getX() + cursorJugador.getTrazo().getTam());
@@ -206,40 +189,26 @@ namespace paniqueados2 {
 
             /// TRAZADO
             Trazo trazo = cursorJugador.getTrazo();
+            
+            tablero.trazoATableros(trazo);
+            
+            List<char[]> matriz = tablero.getMatriz();
 
-            string camino = trazo.getPath();
-            int x = trazo.getX();
-            int y = trazo.getY();
-
-            for(int i = 0; i < camino.Length; i++) {
-                switch (camino[i]) {
-                    case 'X':
-                    break;
-
-                    case 'W':
-                        y -= cursorJugador.getTrazo().getTam();
-                    break;
-
-                    case 'A':
-                        x -= cursorJugador.getTrazo().getTam();
-                    break;
-
-                    case 'S':
-                        y += cursorJugador.getTrazo().getTam();
-                    break;
-
-                    case 'D':
-                        x += cursorJugador.getTrazo().getTam();
-                    break;
+            for (int i = 0; i < matriz.Count; i++) {
+                for(int j = 0; j < matriz[i].Length; j++) {
+                    if(matriz[i][j] =='A') {
+                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
+                    }
+                    if(matriz[i][j] =='C') {
+                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Blue);
+                    }
+                    if(matriz[i][j] =='1') {
+                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Green);
+                    }
                 }
-                if(x >= LimitX) x = LimitX - cursorJugador.getTrazo().getTam();
-                if(y >= LimitY) y = LimitY - cursorJugador.getTrazo().getTam();
-                if(x <= 0) x = 0;
-                if(y <= 0) y = 0;
-                _spriteBatch.Draw(pixel, new Rectangle(x, y, cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
             }
 
-            _spriteBatch.Draw(_textura, _rectangule, Color.White);
+            _spriteBatch.Draw(_textura, new Rectangle(cursorJugador.getX(), cursorJugador.getY(), cursorJugador.getTam(), cursorJugador.getTam()), Color.White);
             _spriteBatch.End();
 
 
