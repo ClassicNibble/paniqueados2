@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using Microsoft.Xna.Framework.Input;
 
 namespace Clases
 {
@@ -28,13 +28,14 @@ namespace Clases
         // Lista de jugadores jugando en el tablero
         // Multiplayer aun no implementado pero esto lo har� m�s sencillo
         List<Jugador> listaJugadores = new List<Jugador>();
+        int numJugadores;
 
         // Estado representando errores
         string estado = "";
 
         //// M�TODOS
         // Constructor
-        public Tablero(int tam, int limX, int limY, int areaRevelada)
+        public Tablero(int tam, int limX, int limY, int areaRevelada, int numJug)
         {
             this.areaRevelada = areaRevelada;
             this.tam = tam;
@@ -42,45 +43,51 @@ namespace Clases
             this.limY = limY;
             this.cantX = limX / tam;
             this.cantY = limY / tam;
+            this.numJugadores = numJug;
 
             char[] linea = new char[cantX];
 
-            bool jColocado = false;
-            while (!jColocado)
-            {
-                try
+            Keys[] teclas = new Keys[5];
+            for(int jColocar = 0; jColocar < numJug; jColocar++) {
+                bool jColocado = false;
+                if (jColocar == 0) teclas = new Keys[] {Keys.W, Keys.S, Keys.A, Keys.D, Keys.X};
+                else if (jColocar == 1) teclas = new Keys[] {Keys.Up, Keys.Down, Keys.Left, Keys.Right, Keys.Space};
+                else if (jColocar == 2) teclas = new Keys[] {Keys.U, Keys.J, Keys.H, Keys.K, Keys.M};
+                while (!jColocado)
                 {
-                    int anchoInicial = -1;
-                    int altoInicial = -1;
-                    Random r = new Random();
-
-                    while (anchoInicial % 2 != 0)
+                    try
                     {
-                        anchoInicial = r.Next(2, (areaRevelada / 2));
-                        altoInicial = areaRevelada / anchoInicial;
-                        if (altoInicial > this.cantY || anchoInicial > this.cantX) anchoInicial = -1;
-                    }
+                        int anchoInicial = -1;
+                        int altoInicial = -1;
+                        Random r = new Random();
 
-                    int posicionInicialX = r.Next(0, this.cantX - anchoInicial);
-                    int posicionInicialY = r.Next(0, this.cantY - altoInicial);
-
-                    for (int i = 0; i < cantY; i++)
-                    {
-                        for (int j = 0; j < cantX; j++)
+                        while (anchoInicial % 2 != 0)
                         {
-                            if (((j >= posicionInicialX) && (i >= posicionInicialY)) && ((j <= posicionInicialX + anchoInicial) && (i <= posicionInicialY + altoInicial))) linea[j] = 'C';
-                            else linea[j] = 'X';
+                            anchoInicial = r.Next(2, (areaRevelada / 2));
+                            altoInicial = areaRevelada / anchoInicial;
+                            if (altoInicial > this.cantY || anchoInicial > this.cantX) anchoInicial = -1;
                         }
-                        this.matriz.Add(linea);
-                        linea = new char[cantX];
+
+                        int posicionInicialX = r.Next(0, this.cantX - anchoInicial);
+                        int posicionInicialY = r.Next(0, this.cantY - altoInicial);
+
+                        for (int i = 0; i < cantY; i++)
+                        {
+                            for (int j = 0; j < cantX; j++)
+                            {
+                                if (((j >= posicionInicialX) && (i >= posicionInicialY)) && ((j <= posicionInicialX + anchoInicial) && (i <= posicionInicialY + altoInicial))) linea[j] = 'C';
+                                else linea[j] = 'X';
+                            }
+                            this.matriz.Add(linea);
+                            linea = new char[cantX];
+                        }
+
+                        this.agregarJugador(teclas);
+                        jColocado = true;
                     }
-
-                    this.agregarJugador();
-                    jColocado = true;
+                    catch (Exception e) { this.estado = e.ToString(); }
+                    }
                 }
-                catch (Exception e) { this.estado = e.ToString(); }
-
-            }
         }
 
         // M�todos GET para obtener los atributos de la instancia
@@ -111,30 +118,34 @@ namespace Clases
             int cantY = this.limY / this.tam;
 
             bool rellenar = false;
-            for (int i = 0; i < cantY; i++)
-            {
-                char[] linea = this.matriz[i];
-                for (int j = 0; j < cantX; j++)
-                {
-                    if (this.listaJugadores[0].getX() / this.tam == j && this.listaJugadores[0].getY() / this.tam == i && linea[j] == 'C')
-                    {
-                        rellenar = true;
-                        break;
-                    }
-                }
-            }
 
-            if (rellenar == true)
-            {
+            for (int numJug = 0; numJug < listaJugadores.Count; numJug++) {
                 for (int i = 0; i < cantY; i++)
                 {
                     char[] linea = this.matriz[i];
+                    for (int j = 0; j < cantX; j++)
+                    {
+                        if (this.listaJugadores[numJug].getX() / this.tam == j && this.listaJugadores[numJug].getY() / this.tam == i && linea[j] == 'C')
+                        {
+                            rellenar = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (rellenar == true) {
+                for (int i = 0; i < cantY; i++) {
+                    char[] linea = this.matriz[i];
                     for (int j = 0; j < cantX; j++) { if (linea[j] == 'A') linea[j] = 'C'; }
                 }
-                this.listaJugadores[0].getTrazo().setPath("X");
-                this.listaJugadores[0].getTrazo().setXInicial(this.listaJugadores[0].getX());
-                this.listaJugadores[0].getTrazo().setYInicial(this.listaJugadores[0].getY());
+                this.listaJugadores[numJug].getTrazo().setPath("X");
+                this.listaJugadores[numJug].getTrazo().setXInicial(this.listaJugadores[numJug].getX());
+                this.listaJugadores[numJug].getTrazo().setYInicial(this.listaJugadores[numJug].getY());
+                }
+
             }
+
+            
         }
 
         // Este m�todo actualiza los estados de los tiles que forman parte del camino actual
@@ -174,10 +185,8 @@ namespace Clases
 
 
         // Agregar un nuevo Jugador en un tile no ocupado
-        public void agregarJugador()
+        public void agregarJugador(Keys[] teclas)
         {
-            if (listaJugadores.Count == 0)
-            {
                 bool colocado = false;
                 while (!colocado)
                 {
@@ -186,12 +195,12 @@ namespace Clases
                     int posY = r.Next(0, this.cantY);
                     if (this.matriz[posY][posX] == 'C')
                     {
-                        listaJugadores.Add(new Jugador(posX * this.tam, posY * this.tam, this.tam));
+                        listaJugadores.Add(new Jugador(posX * this.tam, posY * this.tam, this.tam, teclas));
                         this.matriz[posY][posX] = listaJugadores.Count.ToString()[0];
                         colocado = true;
                     }
                 }
-            }
+            
         }
     }
 }
