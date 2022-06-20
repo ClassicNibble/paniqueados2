@@ -7,6 +7,7 @@ namespace Clases {
         //// ATRIBUTOS
             // Tamaño de los tiles a utilizar
             int tam;
+            string estado = "";
 
             // Los limites del tablero, en pixeles
             int limX;
@@ -37,34 +38,46 @@ namespace Clases {
                 this.cantY = limY / tam;
 
                 char[] linea = new char[cantX];
-            
+
+                bool jColocado = false;
+                while(!jColocado) { 
+                try {
                 int anchoInicial = -1;
                 int altoInicial = -1;
                 Random r = new Random();
 
-                while(anchoInicial % 2 != 0)  anchoInicial = r.Next(2, (areaRevelada/2)); 
-                altoInicial = areaRevelada/anchoInicial;
+                while (anchoInicial % 2 != 0)
+                { anchoInicial = r.Next(2, (areaRevelada / 2));
+                    altoInicial = areaRevelada / anchoInicial;
+                    if (altoInicial > this.cantY || anchoInicial > this.cantX) anchoInicial = -1;
+                }
 
-                int posicionInicialX = r.Next(0,this.cantX-anchoInicial);
-                int posicionInicialY = r.Next(0,this.cantY-altoInicial);
-            
-                for (int i = 0; i < cantY; i++) {
-                    for (int j = 0; j < cantX; j++) {
-                        if(((j >= posicionInicialX) && (i >= posicionInicialY)) && ((j <= posicionInicialX + anchoInicial) && (i <= posicionInicialY + altoInicial))) linea[j] = 'C'; 
-                        else  linea[j] = 'X'; 
+                int posicionInicialX = r.Next(0, this.cantX - anchoInicial);
+                int posicionInicialY = r.Next(0, this.cantY - altoInicial);
+
+                for (int i = 0; i < cantY; i++)
+                {
+                    for (int j = 0; j < cantX; j++)
+                    {
+                        if (((j >= posicionInicialX) && (i >= posicionInicialY)) && ((j <= posicionInicialX + anchoInicial) && (i <= posicionInicialY + altoInicial))) linea[j] = 'C';
+                        else linea[j] = 'X';
                     }
                     this.matriz.Add(linea);
                     linea = new char[cantX];
                 }
 
                 this.agregarJugador();
+                jColocado = true;
+                } catch(Exception e) { this.estado = e.ToString();  }
 
+                }
             }
 
             // Métodos GET para obtener los atributos de la instancia
             public List<Jugador> getJugadores() { return this.listaJugadores; }
             public List<char[]> getMatriz() { return this.matriz; }
             public int getTam() { return this.tam; }
+            public string getEstado() { return this.estado; }
             
             // Métodos ESPECÍFICOS de la instancia
                 // Se utiliza para limpiar el trazo de la pantalla, para volver a trazar con el camino actualizado en cada llamada
