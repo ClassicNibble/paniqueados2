@@ -21,10 +21,12 @@ namespace Clases
 
         //// M�TODOS
         // Constructor
-        public Trazo(int tam)
+        public Trazo(int tam, int x, int y)
         {
             this.path = "X";
             this.tamanio = tam;
+            this.inicioX = x;
+            this.inicioY = y;
         }
 
         // M�todos GET para obtener los atributos de la instancia
@@ -78,18 +80,13 @@ namespace Clases
             {
                 for (int j = 0; j < matriz[i].Length; j++)
                 {
-                    if (matriz[i][j] == 'A')
-                    {
-                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
-                    }
-                    if (matriz[i][j] == 'C')
-                    {
-                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Blue);
-                    }
-                    if (matriz[i][j] == '1')
-                    {
-                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Green);
-                    }
+                    if (matriz[i][j] == 'A') _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
+                    if (matriz[i][j] == 'C') _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Blue);                    
+                    if (matriz[i][j] == '1') _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Green);
+                    if (matriz[i][j] == '2')  _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Yellow);
+                    if (matriz[i][j] == '3')  _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Purple);
+                    
+
                 }
             }
         }
