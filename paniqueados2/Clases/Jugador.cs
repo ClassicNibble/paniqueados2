@@ -18,7 +18,7 @@ namespace Clases
         int iniY;
         int posY;
 
-        
+
 
         // Tama�o del cursor del jugador (es tanto largo como ancho)
         int tam;
@@ -57,45 +57,57 @@ namespace Clases
         public void setTam(int t) { this.tam = t; }
 
         // M�todos ESPEC�FICOS de la instancia
-            // Reiniciar la posicion del Jugador a la inicial
-            public void reiniciarPos() { this.posX = this.iniX; this.posY = this.iniY; }
-            
-            // Limitar la posicion del Jugador con respecto a los limites del mapa
-            public bool LimitMap(int LimitX,int LimitY) {
-                bool res = false;
+        // Reiniciar la posicion del Jugador a la inicial
+        public void reiniciarPos() { this.posX = this.iniX; this.posY = this.iniY; }
 
-                if (this.getX() < 0) { res = true;  this.setX(0); }
-                else if (this.getX() >= LimitX) { res = true; this.setX(LimitX - this.getTam()); }
+        // Limitar la posicion del Jugador con respecto a los limites del mapa
+        public bool LimitMap(int LimitX, int LimitY)
+        {
+            bool res = false;
 
-                if (this.getY() < 0) { res = true; this.setY(0); }
-                else if (this.getY() >= LimitY) { res = true; this.setY(LimitY - this.getTam()); }
+            if (this.getX() < 0) { res = true; this.setX(0); }
+            else if (this.getX() >= LimitX) { res = true; this.setX(LimitX - this.getTam()); }
 
-                return res;
-            }
-            
-            // Manejo de los controles
-            public void update(Tablero tablero,int LimitX,int LimitY) {
-                if ( Keyboard.GetState().IsKeyDown(controles[3])) {
+            if (this.getY() < 0) { res = true; this.setY(0); }
+            else if (this.getY() >= LimitY) { res = true; this.setY(LimitY - this.getTam()); }
+
+            return res;
+        }
+
+        // Manejo de los controles
+        public void update(Tablero tablero, int LimitX, int LimitY)
+        {
+
+
+            if (Globals.pause)
+            {
+                if (Keyboard.GetState().IsKeyDown(controles[3]))
+                {
                     this.setX(this.getX() + this.getTrazo().getTam());
-                    if (!LimitMap(LimitX,LimitY)) { this.getTrazo().nuevaDireccion("D"); }
+                    if (!LimitMap(LimitX, LimitY)) { this.getTrazo().nuevaDireccion("D"); }
                 }
-                else if (Keyboard.GetState().IsKeyDown(controles[2])) {
+                else if (Keyboard.GetState().IsKeyDown(controles[2]))
+                {
                     this.setX(this.getX() - this.getTrazo().getTam());
-                    if (!LimitMap(LimitX,LimitY)) { this.getTrazo().nuevaDireccion("A"); }
+                    if (!LimitMap(LimitX, LimitY)) { this.getTrazo().nuevaDireccion("A"); }
                 }
 
-                if (Keyboard.GetState().IsKeyDown(controles[0]))  {
+                if (Keyboard.GetState().IsKeyDown(controles[0]))
+                {
                     this.setY(this.getY() - this.getTrazo().getTam());
-                    if (!LimitMap(LimitX,LimitY)) { this.getTrazo().nuevaDireccion("W"); }
+                    if (!LimitMap(LimitX, LimitY)) { this.getTrazo().nuevaDireccion("W"); }
                 }
-                else if (Keyboard.GetState().IsKeyDown(controles[1])) {
+                else if (Keyboard.GetState().IsKeyDown(controles[1]))
+                {
                     this.setY(this.getY() + this.getTrazo().getTam());
-                    if (!LimitMap(LimitX,LimitY)) { this.getTrazo().nuevaDireccion("S"); }
+                    if (!LimitMap(LimitX, LimitY)) { this.getTrazo().nuevaDireccion("S"); }
                 }
 
-                else if (Keyboard.GetState().IsKeyDown(controles[4])) {
+                else if (Keyboard.GetState().IsKeyDown(controles[4]))
+                {
                     char ultimaDir = this.getTrazo().backtrack();
-                    switch (ultimaDir) {
+                    switch (ultimaDir)
+                    {
                         case 'W':
                             this.setY(this.getY() + this.getTrazo().getTam());
                             break;
@@ -111,5 +123,6 @@ namespace Clases
                     }
                 }
             }
+        }
     }
 }
