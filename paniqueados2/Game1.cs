@@ -24,7 +24,7 @@ namespace paniqueados2
 
         // Cambiar los tamaños aquí para ver reflejados
         static int tam = 10;
-        static Tablero tablero = new Tablero(tam, LimitX, LimitY, 100);
+        static Tablero tablero = new Tablero(tam, LimitX, LimitY, 500);
         Jugador cursorJugador = tablero.getJugadores()[0];
 
 
@@ -34,10 +34,6 @@ namespace paniqueados2
         int contador = 0;
 
         public List<Vector2> pixelScreen = new List<Vector2>();
-
-        //Rastroo
-
-        SpriteFont font;
         enum GameStates
         {
             MainMenu,
@@ -46,8 +42,14 @@ namespace paniqueados2
             Exit
         }
         GameStates CurrentGameState = GameStates.MainMenu;
+
         cButtons cPlay;
         cButtons cExit;
+        ///////////////////
+        //Rastroo
+
+        SpriteFont font;
+
 
 
         public bool LimitMap()
@@ -116,8 +118,8 @@ namespace paniqueados2
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            font = Content.Load<SpriteFont>("File");
-            _textura = Content.Load<Texture2D>("puntito");
+            font = Content.Load<SpriteFont>("assets/File");
+            _textura = Content.Load<Texture2D>("assets/puntito");
 
 
             cPlay = new cButtons(Content.Load<Texture2D>("assets/play"), _graphics.GraphicsDevice);
@@ -133,8 +135,8 @@ namespace paniqueados2
         protected override void Update(GameTime gameTime)
         {
 
-
             MouseState mouse = Mouse.GetState();
+
 
             switch (CurrentGameState)
             {
@@ -152,13 +154,10 @@ namespace paniqueados2
                     break;
 
                 case GameStates.Exit:
-
+                this.Exit();
                     break;
 
                 case GameStates.InGame:
-                    break;
-            }
-
 
 
 
@@ -216,12 +215,19 @@ namespace paniqueados2
                 }
             }
 
+
+
+
+                    break;
+            }
+
+
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-
 
 
 
@@ -234,7 +240,6 @@ namespace paniqueados2
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //EMPEZAR A DIBUJAR
             _spriteBatch.Begin();
-
             /// MENU
             switch (CurrentGameState)
             {
@@ -254,12 +259,16 @@ namespace paniqueados2
                     trazo.Draw(_spriteBatch, tablero, pixel, cursorJugador);
                     //   JUGADOR
                     _spriteBatch.Draw(_textura, new Rectangle(cursorJugador.getX(), cursorJugador.getY(), cursorJugador.getTam(), cursorJugador.getTam()), Color.White);
-                    _spriteBatch.End();
-                    base.Draw(gameTime);
                     break;
+
+
             }
+
+
             /// TEXTO
 
+            _spriteBatch.End();
+            base.Draw(gameTime);
         }
 
     }
