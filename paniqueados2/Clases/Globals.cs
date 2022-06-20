@@ -10,6 +10,8 @@ namespace Clases
 
 
         public static bool pause = true;
+        public static bool backMenu = true;
+
         public static bool PausekeyPress = false;
 
         public enum GameStates

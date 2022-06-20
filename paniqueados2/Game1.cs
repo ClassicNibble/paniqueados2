@@ -29,7 +29,7 @@ namespace paniqueados2
         int contador = 0;
 
         public List<Vector2> pixelScreen = new List<Vector2>();
-        
+
         ///////////////////
         //Rastroo
 
@@ -62,21 +62,22 @@ namespace paniqueados2
 
             font = Content.Load<SpriteFont>("assets/File");
             _textura = Content.Load<Texture2D>("assets/puntito");
-
+            menuPaused.LoadContent(this.Content, _graphics);
             mainmenu.LoadContent(this.Content, _graphics);
         }
 
         protected override void Update(GameTime gameTime)
         {
             MouseState mouse = Mouse.GetState();
-            menuPaused.PressButtonPaused();
 
             switch (Globals.CurrentGameState)
             {
                 case Globals.GameStates.MainMenu:
                     if (mainmenu.GetButtonPlay().isClicked == true)
                     {
+
                         Globals.CurrentGameState = Globals.GameStates.InGame;
+
                     }
                     else if (mainmenu.GetButtonExit().isClicked == true)
                     {
@@ -91,10 +92,16 @@ namespace paniqueados2
                     break;
 
                 case Globals.GameStates.InGame:
+
+                    menuPaused.PressButtonPaused(mouse);
+
                     contador++;
                     time = contador / 1000;
+
                     for (int i = 0; i < cursoresJugadores.Count; i++) { cursoresJugadores[i].update(tablero, LimitX, LimitY); }
+
                     break;
+
 
             }
             base.Update(gameTime);
@@ -123,10 +130,21 @@ namespace paniqueados2
                 ///IN GAME
                 case Globals.GameStates.InGame:
                     /// TRAZADO
-                    for (int i = 0; i < trazos.Count; i++) { trazos[i].Draw(_spriteBatch, tablero, pixel, cursoresJugadores[i]); }
-                    //   JUGADOR
-                    for (int i = 0; i < cursoresJugadores.Count; i++) { _spriteBatch.Draw(_textura, new Rectangle(cursoresJugadores[i].getX(), cursoresJugadores[i].getY(), cursoresJugadores[i].getTam(), cursoresJugadores[i].getTam()), Color.White); }
+                    if (Globals.pause == true)
+                    {
+                        menuPaused.Draw(_spriteBatch);
+                        menuPaused.GetButtonMenu().Draw(_spriteBatch);
+                        menuPaused.GetButtonResumen().Draw(_spriteBatch);
 
+
+                    }
+                    else
+                    {
+
+                        for (int i = 0; i < trazos.Count; i++) { trazos[i].Draw(_spriteBatch, tablero, pixel, cursoresJugadores[i]); }
+                        //   JUGADOR
+                        for (int i = 0; i < cursoresJugadores.Count; i++) { _spriteBatch.Draw(_textura, new Rectangle(cursoresJugadores[i].getX(), cursoresJugadores[i].getY(), cursoresJugadores[i].getTam(), cursoresJugadores[i].getTam()), Color.White); }
+                    }
                     break;
             }
             _spriteBatch.End();

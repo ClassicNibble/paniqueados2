@@ -33,6 +33,7 @@ namespace Clases
         public cButtons GetButtonPlay() { return cPlay; }
 
         public cButtons GetButtonExit() { return cExit; }
+        
 
 
 

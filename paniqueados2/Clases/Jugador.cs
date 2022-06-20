@@ -79,7 +79,7 @@ namespace Clases
         {
 
 
-            if (Globals.pause)
+            if (Globals.pause==false)
             {
                 if (Keyboard.GetState().IsKeyDown(controles[3]))
                 {
@@ -92,7 +92,7 @@ namespace Clases
                     if (!LimitMap(LimitX, LimitY)) { this.getTrazo().nuevaDireccion("A"); }
                 }
 
-                if (Keyboard.GetState().IsKeyDown(controles[0]))
+               else if (Keyboard.GetState().IsKeyDown(controles[0]))
                 {
                     this.setY(this.getY() - this.getTrazo().getTam());
                     if (!LimitMap(LimitX, LimitY)) { this.getTrazo().nuevaDireccion("W"); }
