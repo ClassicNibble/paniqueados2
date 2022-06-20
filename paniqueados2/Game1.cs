@@ -10,7 +10,8 @@ using Microsoft.Xna.Framework.Input;
 using Clases;
 
 
-namespace paniqueados2 {
+namespace paniqueados2
+{
 
     public class Game1 : Game
     {
@@ -23,11 +24,11 @@ namespace paniqueados2 {
 
         // Cambiar los tamaños aquí para ver reflejados
         static int tam = 10;
-        static Tablero tablero = new Tablero(tam, LimitX, LimitY, 500);
+        static Tablero tablero = new Tablero(tam, LimitX, LimitY, 100);
         Jugador cursorJugador = tablero.getJugadores()[0];
 
 
-        Vector2 posicionPlayer  = new Vector2(0, 0);
+        Vector2 posicionPlayer = new Vector2(0, 0);
 
         float time;
         int contador = 0;
@@ -35,9 +36,19 @@ namespace paniqueados2 {
         public List<Vector2> pixelScreen = new List<Vector2>();
 
         //Rastroo
-        SpriteFont font;
 
-        
+        SpriteFont font;
+        enum GameStates
+        {
+            MainMenu,
+            InGame,
+            Options,
+            Exit
+        }
+        GameStates CurrentGameState = GameStates.MainMenu;
+        cButtons cPlay;
+        cButtons cExit;
+
 
         public bool LimitMap()
         {
@@ -51,7 +62,7 @@ namespace paniqueados2 {
             else if (cursorJugador.getX() >= LimitX)
             {
                 res = true;
-                cursorJugador.setX(LimitX-cursorJugador.getTam());
+                cursorJugador.setX(LimitX - cursorJugador.getTam());
             }
             if (cursorJugador.getY() < 0)
             {
@@ -61,7 +72,7 @@ namespace paniqueados2 {
             else if (cursorJugador.getY() >= LimitY)
             {
                 res = true;
-                cursorJugador.setY(LimitY-cursorJugador.getTam());
+                cursorJugador.setY(LimitY - cursorJugador.getTam());
             }
 
             return res;
@@ -71,7 +82,7 @@ namespace paniqueados2 {
 
         Texture2D pixel;
 
-        
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -91,7 +102,7 @@ namespace paniqueados2 {
             _graphics.PreferredBackBufferWidth = LimitX;
             _graphics.PreferredBackBufferHeight = LimitY;
             _graphics.IsFullScreen = false;
-            
+
             _graphics.ApplyChanges();
             base.Initialize();
 
@@ -99,68 +110,108 @@ namespace paniqueados2 {
 
         protected override void LoadContent()
         {
-            
+
             cursorJugador.getTrazo().setXInicial(cursorJugador.getX());
             cursorJugador.getTrazo().setYInicial(cursorJugador.getY());
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("File");
-
             _textura = Content.Load<Texture2D>("puntito");
-            
+
+
+            cPlay = new cButtons(Content.Load<Texture2D>("assets/play"), _graphics.GraphicsDevice);
+            cExit = new cButtons(Content.Load<Texture2D>("assets/exit"), _graphics.GraphicsDevice);
+
+            cPlay.setPosition(new Vector2(350, 300));
+
+            cExit.setPosition(new Vector2(600, 300));
+
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-            posicionPlayer  = new Vector2(cursorJugador.getX(), cursorJugador.getY());
+
+
+            MouseState mouse = Mouse.GetState();
+
+            switch (CurrentGameState)
+            {
+                case GameStates.MainMenu:
+                    if (cPlay.isClicked == true)
+                    {
+                        CurrentGameState = GameStates.InGame;
+                    }
+                    else if (cExit.isClicked == true)
+                    {
+                        this.Exit();
+                    }
+                    cExit.Update(mouse);
+                    cPlay.Update(mouse);
+                    break;
+
+                case GameStates.Exit:
+
+                    break;
+
+                case GameStates.InGame:
+                    break;
+            }
+
+
+
+
+            posicionPlayer = new Vector2(cursorJugador.getX(), cursorJugador.getY());
             contador++;
             time = contador / 1000;
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            
 
 
-            
-            if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D) )
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                cursorJugador.setX( cursorJugador.getX() + cursorJugador.getTrazo().getTam());
+                cursorJugador.setX(cursorJugador.getX() + cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("D"); }
 
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Left) || Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                cursorJugador.setX( cursorJugador.getX() - cursorJugador.getTrazo().getTam());
+                cursorJugador.setX(cursorJugador.getX() - cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("A"); }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Up) || Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                cursorJugador.setY( cursorJugador.getY() - cursorJugador.getTrazo().getTam());
+                cursorJugador.setY(cursorJugador.getY() - cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("W"); }
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Down) || Keyboard.GetState().IsKeyDown(Keys.S) )
+            else if (Keyboard.GetState().IsKeyDown(Keys.Down) || Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                cursorJugador.setY( cursorJugador.getY() + cursorJugador.getTrazo().getTam());
+                cursorJugador.setY(cursorJugador.getY() + cursorJugador.getTrazo().getTam());
                 if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("S"); }
             }
 
-            else if (Keyboard.GetState().IsKeyDown(Keys.Space)) {
+            else if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
                 char ultimaDir = cursorJugador.getTrazo().backtrack();
-                switch(ultimaDir) {
-                    case 'W' :
-                        cursorJugador.setY( cursorJugador.getY() + cursorJugador.getTrazo().getTam());
+
+                switch (ultimaDir)
+                {
+                    case 'W':
+                        cursorJugador.setY(cursorJugador.getY() + cursorJugador.getTrazo().getTam());
                         break;
-                    case 'A' :
-                        cursorJugador.setX( cursorJugador.getX() + cursorJugador.getTrazo().getTam());
+                    case 'A':
+                        cursorJugador.setX(cursorJugador.getX() + cursorJugador.getTrazo().getTam());
                         break;
-                    case 'S' :
-                        cursorJugador.setY( cursorJugador.getY() - cursorJugador.getTrazo().getTam());
+                    case 'S':
+                        cursorJugador.setY(cursorJugador.getY() - cursorJugador.getTrazo().getTam());
                         break;
-                    case 'D' :
-                        cursorJugador.setX( cursorJugador.getX() - cursorJugador.getTrazo().getTam());
+                    case 'D':
+                        cursorJugador.setX(cursorJugador.getX() - cursorJugador.getTrazo().getTam());
                         break;
                 }
             }
@@ -171,48 +222,44 @@ namespace paniqueados2 {
         protected override void Draw(GameTime gameTime)
         {
 
+
+
+
             string playerX = "";
             string playerY = "";
             Vector2 position2 = new Vector2(10, 10);
             Vector2 textMiddlePoint = font.MeasureString("text") / 2;
+            Trazo trazo = cursorJugador.getTrazo();
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            //EMPEZAR A DIBUJAR
             _spriteBatch.Begin();
-            
-            
-            ///Texto
-            playerX = new StringBuilder().Append(posicionPlayer.X).ToString();
-            playerY = new StringBuilder().Append(posicionPlayer.Y).ToString();
-            _spriteBatch.DrawString(font, "X:" + playerX + " Y:" + playerY + " Path:" + cursorJugador.getTrazo().getPath(), position2, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
 
-            ///PUNTO
+            /// MENU
+            switch (CurrentGameState)
+            {
+                case GameStates.MainMenu:
+                    cPlay.Draw(_spriteBatch);
+                    cExit.Draw(_spriteBatch);
+                    break;
 
-            /// TRAZADO
-            Trazo trazo = cursorJugador.getTrazo();
-            
-            tablero.trazoATableros(trazo);
-            
-            List<char[]> matriz = tablero.getMatriz();
 
-            for (int i = 0; i < matriz.Count; i++) {
-                for(int j = 0; j < matriz[i].Length; j++) {
-                    if(matriz[i][j] =='A') {
-                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
-                    }
-                    if(matriz[i][j] =='C') {
-                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Blue);
-                    }
-                    if(matriz[i][j] =='1') {
-                        _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Green);
-                    }
-                }
+                ///IN GAME
+
+                case GameStates.InGame:
+                    playerX = new StringBuilder().Append(posicionPlayer.X).ToString();
+                    playerY = new StringBuilder().Append(posicionPlayer.Y).ToString();
+                    _spriteBatch.DrawString(font, "X:" + playerX + " Y:" + playerY + " Path:" + cursorJugador.getTrazo().getPath(), position2, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+                    /// TRAZADO
+                    trazo.Draw(_spriteBatch, tablero, pixel, cursorJugador);
+                    //   JUGADOR
+                    _spriteBatch.Draw(_textura, new Rectangle(cursorJugador.getX(), cursorJugador.getY(), cursorJugador.getTam(), cursorJugador.getTam()), Color.White);
+                    _spriteBatch.End();
+                    base.Draw(gameTime);
+                    break;
             }
+            /// TEXTO
 
-            _spriteBatch.Draw(_textura, new Rectangle(cursorJugador.getX(), cursorJugador.getY(), cursorJugador.getTam(), cursorJugador.getTam()), Color.White);
-            _spriteBatch.End();
-
-
-            base.Draw(gameTime);
         }
 
     }
