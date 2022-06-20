@@ -1,6 +1,7 @@
-# paniqueados
-uysss que miedooo
+# PANIQUEADOS
 
-- Para poder ejecutar Microsoft XNA en vscode [checar aqui](https://medium.com/learning-c-by-developing-games/getting-started-with-c-monogame-in-vs-code-2c26c7f198c2)
+Motor de juego tipo "Qix game" realizado en Microsoft XNA
 
-- Documentacion monogame [aca](https://docs.monogame.net/articles/platforms/0_platforms.html)
+- Para poder ejecutar Microsoft XNA en vscode como también más requisitos [checar aqui](https://medium.com/learning-c-by-developing-games/getting-started-with-c-monogame-in-vs-code-2c26c7f198c2)
+
+- Documentacion monogame [checar aqui](https://docs.monogame.net/articles/platforms/0_platforms.html)
