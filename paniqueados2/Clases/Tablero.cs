@@ -29,6 +29,9 @@ namespace Clases
         // Multiplayer aun no implementado pero esto lo har� m�s sencillo
         List<Jugador> listaJugadores = new List<Jugador>();
 
+        // Estado representando errores
+        string estado = "";
+
         //// M�TODOS
         // Constructor
         public Tablero(int tam, int limX, int limY, int areaRevelada)
@@ -42,35 +45,49 @@ namespace Clases
 
             char[] linea = new char[cantX];
 
-            int anchoInicial = -1;
-            int altoInicial = 1;
-            Random r = new Random();
-
-            while (anchoInicial % 20 != 0) anchoInicial = r.Next(2, (areaRevelada / 2));
-            altoInicial = areaRevelada / anchoInicial;
-
-            int posicionInicialX = r.Next(0, this.cantX - anchoInicial);
-            int posicionInicialY = r.Next(0, this.cantY - altoInicial);
-
-            for (int i = 0; i < cantY; i++)
+            bool jColocado = false;
+            while (!jColocado)
             {
-                for (int j = 0; j < cantX; j++)
+                try
                 {
-                    if (((j >= posicionInicialX) && (i >= posicionInicialY)) && ((j <= posicionInicialX + anchoInicial) && (i <= posicionInicialY + altoInicial))) linea[j] = 'C';
-                    else linea[j] = 'X';
+                    int anchoInicial = -1;
+                    int altoInicial = -1;
+                    Random r = new Random();
+
+                    while (anchoInicial % 2 != 0)
+                    {
+                        anchoInicial = r.Next(2, (areaRevelada / 2));
+                        altoInicial = areaRevelada / anchoInicial;
+                        if (altoInicial > this.cantY || anchoInicial > this.cantX) anchoInicial = -1;
+                    }
+
+                    int posicionInicialX = r.Next(0, this.cantX - anchoInicial);
+                    int posicionInicialY = r.Next(0, this.cantY - altoInicial);
+
+                    for (int i = 0; i < cantY; i++)
+                    {
+                        for (int j = 0; j < cantX; j++)
+                        {
+                            if (((j >= posicionInicialX) && (i >= posicionInicialY)) && ((j <= posicionInicialX + anchoInicial) && (i <= posicionInicialY + altoInicial))) linea[j] = 'C';
+                            else linea[j] = 'X';
+                        }
+                        this.matriz.Add(linea);
+                        linea = new char[cantX];
+                    }
+
+                    this.agregarJugador();
+                    jColocado = true;
                 }
-                this.matriz.Add(linea);
-                linea = new char[cantX];
+                catch (Exception e) { this.estado = e.ToString(); }
+
             }
-
-            this.agregarJugador();
-
         }
 
         // M�todos GET para obtener los atributos de la instancia
         public List<Jugador> getJugadores() { return this.listaJugadores; }
         public List<char[]> getMatriz() { return this.matriz; }
         public int getTam() { return this.tam; }
+        public string getEstado() { return this.estado; }
 
         // M�todos ESPEC�FICOS de la instancia
         // Se utiliza para limpiar el trazo de la pantalla, para volver a trazar con el camino actualizado en cada llamada
