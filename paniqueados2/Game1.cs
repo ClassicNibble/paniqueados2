@@ -1,9 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using System;
-using System.Text.RegularExpressions;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -52,33 +48,7 @@ namespace paniqueados2
 
 
 
-        public bool LimitMap()
-        {
-            bool res = false;
 
-            if (cursorJugador.getX() < 0)
-            {
-                res = true;
-                cursorJugador.setX(0);
-            }
-            else if (cursorJugador.getX() >= LimitX)
-            {
-                res = true;
-                cursorJugador.setX(LimitX - cursorJugador.getTam());
-            }
-            if (cursorJugador.getY() < 0)
-            {
-                res = true;
-                cursorJugador.setY(0);
-            }
-            else if (cursorJugador.getY() >= LimitY)
-            {
-                res = true;
-                cursorJugador.setY(LimitY - cursorJugador.getTam());
-            }
-
-            return res;
-        }
 
 
 
@@ -154,83 +124,22 @@ namespace paniqueados2
                     break;
 
                 case GameStates.Exit:
-                this.Exit();
+                    this.Exit();
                     break;
 
                 case GameStates.InGame:
-
-
-
-            posicionPlayer = new Vector2(cursorJugador.getX(), cursorJugador.getY());
-            contador++;
-            time = contador / 1000;
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-
-
-
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                cursorJugador.setX(cursorJugador.getX() + cursorJugador.getTrazo().getTam());
-                if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("D"); }
-
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Left) || Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                cursorJugador.setX(cursorJugador.getX() - cursorJugador.getTrazo().getTam());
-                if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("A"); }
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Up) || Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                cursorJugador.setY(cursorJugador.getY() - cursorJugador.getTrazo().getTam());
-                if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("W"); }
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Down) || Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                cursorJugador.setY(cursorJugador.getY() + cursorJugador.getTrazo().getTam());
-                if (!LimitMap()) { cursorJugador.getTrazo().nuevaDireccion("S"); }
-            }
-
-            else if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                char ultimaDir = cursorJugador.getTrazo().backtrack();
-
-                switch (ultimaDir)
-                {
-                    case 'W':
-                        cursorJugador.setY(cursorJugador.getY() + cursorJugador.getTrazo().getTam());
-                        break;
-                    case 'A':
-                        cursorJugador.setX(cursorJugador.getX() + cursorJugador.getTrazo().getTam());
-                        break;
-                    case 'S':
-                        cursorJugador.setY(cursorJugador.getY() - cursorJugador.getTrazo().getTam());
-                        break;
-                    case 'D':
-                        cursorJugador.setX(cursorJugador.getX() - cursorJugador.getTrazo().getTam());
-                        break;
-                }
-            }
-
-
-
-
+                    contador++;
+                    time = contador / 1000;
+                    cursorJugador.update(posicionPlayer, tablero, LimitX, LimitY);
                     break;
+
             }
-
-
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-
-
-
             string playerX = "";
             string playerY = "";
             Vector2 position2 = new Vector2(10, 10);
@@ -247,8 +156,6 @@ namespace paniqueados2
                     cPlay.Draw(_spriteBatch);
                     cExit.Draw(_spriteBatch);
                     break;
-
-
                 ///IN GAME
 
                 case GameStates.InGame:
@@ -260,13 +167,7 @@ namespace paniqueados2
                     //   JUGADOR
                     _spriteBatch.Draw(_textura, new Rectangle(cursorJugador.getX(), cursorJugador.getY(), cursorJugador.getTam(), cursorJugador.getTam()), Color.White);
                     break;
-
-
             }
-
-
-            /// TEXTO
-
             _spriteBatch.End();
             base.Draw(gameTime);
         }
