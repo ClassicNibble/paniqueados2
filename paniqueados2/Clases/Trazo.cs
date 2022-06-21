@@ -70,26 +70,33 @@ namespace Clases
             this.path = cadenaSinRedundancia;
         }
 
-        public void Draw(SpriteBatch _spriteBatch, Tablero tablero, Texture2D pixel, Jugador cursorJugador)
-        {
-
-            tablero.trazoATableros(this);
-            List<char[]> matriz = tablero.getMatriz();
-
-            for (int i = 0; i < matriz.Count; i++)
-            {
-                for (int j = 0; j < matriz[i].Length; j++)
-                {
-                    if (matriz[i][j] == 'A') _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Red);
-                    if (matriz[i][j] == 'C') _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Blue);                    
-                    if (matriz[i][j] == '1') _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Green);
-                    if (matriz[i][j] == '2')  _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Yellow);
-                    if (matriz[i][j] == '3')  _spriteBatch.Draw(pixel, new Rectangle(j * tablero.getTam(), i * tablero.getTam(), cursorJugador.getTrazo().getTam(), cursorJugador.getTrazo().getTam()), Color.Purple);
-                    
-
+        public void dibujarTrazo(SpriteBatch _spriteBatch, Texture2D pixel) {
+            int x = this.inicioX;
+            int y = this.inicioY;
+            bool dibujar;
+            for(int i = 0; i < path.Length; i++ ) {
+                dibujar = true;
+                switch(path[i]) {
+                    case 'X':
+                        dibujar = false;
+                        break;
+                    case 'W':
+                        y -= this.tamanio;
+                        break;
+                    case 'A':
+                        x -= this.tamanio;
+                        break;
+                    case 'S':
+                        y += this.tamanio;
+                        break;
+                    case 'D':
+                        x += this.tamanio;
+                        break;
                 }
+                if(dibujar) _spriteBatch.Draw(pixel, new Rectangle(x, y, this.tamanio, this.tamanio), Color.Red);
             }
         }
+
 
     }
 
