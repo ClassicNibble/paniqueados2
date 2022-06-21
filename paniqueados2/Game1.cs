@@ -141,7 +141,7 @@ namespace paniqueados2
                     else
                     {
 
-                        for (int i = 0; i < trazos.Count; i++) { trazos[i].Draw(_spriteBatch, tablero, pixel, cursoresJugadores[i]); }
+                        tablero.dibujarTablero(_spriteBatch, pixel);
                         //   JUGADOR
                         for (int i = 0; i < cursoresJugadores.Count; i++) { _spriteBatch.Draw(_textura, new Rectangle(cursoresJugadores[i].getX(), cursoresJugadores[i].getY(), cursoresJugadores[i].getTam(), cursoresJugadores[i].getTam()), Color.White); }
                     }

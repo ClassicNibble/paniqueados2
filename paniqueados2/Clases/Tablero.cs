@@ -1,5 +1,8 @@
-using System;
 using System.Collections.Generic;
+using System;
+using System.Text.RegularExpressions;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Clases
@@ -51,41 +54,27 @@ namespace Clases
             for(int jColocar = 0; jColocar < numJug; jColocar++) {
                 bool jColocado = false;
                 if (jColocar == 0) teclas = new Keys[] {Keys.W, Keys.S, Keys.A, Keys.D, Keys.X};
-                else if (jColocar == 1) teclas = new Keys[] {Keys.Up, Keys.Down, Keys.Left, Keys.Right, Keys.Space};
-                else if (jColocar == 2) teclas = new Keys[] {Keys.U, Keys.J, Keys.H, Keys.K, Keys.M};
                 while (!jColocado)
                 {
                     try
                     {
-                        int anchoInicial = -1;
-                        int altoInicial = -1;
-                        Random r = new Random();
-
-                        while (anchoInicial % 2 != 0)
-                        {
-                            anchoInicial = r.Next(2, (areaRevelada / 2));
-                            altoInicial = areaRevelada / anchoInicial;
-                            if (altoInicial > this.cantY || anchoInicial > this.cantX) anchoInicial = -1;
-                        }
-
-                        int posicionInicialX = r.Next(0, this.cantX - anchoInicial);
-                        int posicionInicialY = r.Next(0, this.cantY - altoInicial);
-
                         for (int i = 0; i < cantY; i++)
                         {
+                            linea = new char[cantX];
                             for (int j = 0; j < cantX; j++)
                             {
-                                if (((j >= posicionInicialX) && (i >= posicionInicialY)) && ((j <= posicionInicialX + anchoInicial) && (i <= posicionInicialY + altoInicial))) linea[j] = 'C';
+                                if( ((j == 1 || j == cantX - 2) && (i>1 && i<= cantY-2 )) || ((j >= 1 && j <= cantX-2) && (i == 1 || i == cantY - 2))) linea[j] = 'C';
                                 else linea[j] = 'X';
                             }
                             this.matriz.Add(linea);
-                            linea = new char[cantX];
+                            
                         }
 
                         this.agregarJugador(teclas);
                         jColocado = true;
                     }
-                    catch (Exception e) { this.estado = e.ToString(); }
+                    
+                    catch (Exception e) { this.estado = e.ToString(); jColocado = true; }
                     }
                 }
         }
@@ -133,7 +122,7 @@ namespace Clases
                     }
                 }
 
-                if (rellenar == true) {
+                if (rellenar == true && listaJugadores[numJug].getTrazo().getPath().Length > 2) {
                 for (int i = 0; i < cantY; i++) {
                     char[] linea = this.matriz[i];
                     for (int j = 0; j < cantX; j++) { if (linea[j] == 'A') linea[j] = 'C'; }
@@ -201,6 +190,28 @@ namespace Clases
                     }
                 }
             
+        }
+
+        public void dibujarTablero(SpriteBatch _spriteBatch, Texture2D pixel) {
+            this.trazoATableros(listaJugadores[0].getTrazo());
+            listaJugadores[0].getTrazo().dibujarTrazo(_spriteBatch, pixel);
+
+            for (int i = 0; i < matriz.Count; i++)
+            {
+                for (int j = 0; j < matriz[i].Length; j++)
+                {
+                   
+                    if (this.matriz[i][j] == 'C') _spriteBatch.Draw(pixel, new Rectangle(j * this.tam, i * this.tam, this.tam, this.tam), Color.Blue);                    
+                    if (this.matriz[i][j] == '1') _spriteBatch.Draw(pixel, new Rectangle(j * this.tam, i * this.tam, this.tam, this.tam), Color.Green);
+                    if (this.matriz[i][j] == '2')  _spriteBatch.Draw(pixel, new Rectangle(j * this.tam, i * this.tam, this.tam, this.tam), Color.Yellow);
+                    if (this.matriz[i][j] == '3')  _spriteBatch.Draw(pixel, new Rectangle(j * this.tam, i * this.tam, this.tam, this.tam), Color.Purple);;
+                    
+
+                }
+            }
+
+
+
         }
     }
 }
